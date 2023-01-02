@@ -1,0 +1,10 @@
+
+bind_addr = ":8080"
+secret_key = "secret key"
+database_url = "user=user password=password host=localhost port=5432 dbname=dbname sslmode=disable"
+
+redis_host = "localhost"
+redis_port = ":6379"
+redis_pass = ""
+redis_db = 0
+redis_exp = 60
