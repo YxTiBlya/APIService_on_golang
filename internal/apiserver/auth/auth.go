@@ -17,11 +17,13 @@ func CreateJWT() (string, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 
+	config := cfg.GetConfig()
+
 	// creates a token time limit
-	claims["exp"] = time.Now().Add(time.Hour).Unix()
+	claims["exp"] = time.Now().Add(config.JWTtime * time.Minute).Unix()
 
 	if secret_key == nil {
-		secret_key = []byte(cfg.GetConfig().SecretKey)
+		secret_key = []byte(config.SecretKey)
 	}
 
 	tokenStr, err := token.SignedString(secret_key)
