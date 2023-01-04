@@ -1,10 +1,15 @@
 
-bind_addr = ":8080"
-secret_key = "secret key"
-database_url = "user=user password=password host=localhost port=5432 dbname=dbname sslmode=disable"
+bind_addr = ":8080"         # port of apiserver
+secret_key = "secret key"   # secret key for jwt
+jwt_time = 60               # jwt lifetime in minuts
+database_url = "user=postgres password=password host=localhost port=5432 dbname=dbname sslmode=disable"
 
 redis_host = "localhost"
 redis_port = ":6379"
 redis_pass = ""
 redis_db = 0
-redis_exp = 60
+redis_exp = 60              # redis var lifetime in seconds
+
+rabbit_url = "amqp://guest:guest@localhost:5672/"
+
+mailer_exp = 60             # mailer waiting time in seconds
