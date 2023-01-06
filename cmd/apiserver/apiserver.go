@@ -23,7 +23,7 @@ func main() {
 	cfg.ChangeConfig(config)
 
 	// connection to db
-	_, err := store.NewDB(config.DatabaseURL)
+	_, err := store.NewDB(config)
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -31,6 +31,8 @@ func main() {
 	// logger writer in file and console
 	f, _ := os.Create("logger/gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
+	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.New()
 
@@ -75,5 +77,5 @@ func main() {
 		authorized.DELETE("/api/message/delete", routehandler.Message_delete)
 	}
 
-	r.Run(config.BindAddr)
+	r.Run(":" + config.BindAddr)
 }
