@@ -1,0 +1,16 @@
+FROM golang:1.19.4
+
+WORKDIR /mailer
+
+COPY cmd/mailer cmd/mailer/
+COPY internal/cfg internal/cfg/
+COPY internal/mailer internal/mailer/
+COPY internal/rabbitmq internal/rabbitmq/
+COPY internal/store internal/store/
+COPY internal/models internal/models/
+
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+CMD [ "go", "run", "cmd/mailer/mailer.go" ]
