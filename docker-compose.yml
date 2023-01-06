@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: db-postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/pgdata
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${postgres_user}
+      POSTGRES_PASSWORD: ${postgres_password}
+      POSTGRES_DB: ${postgres_dbname}
+    ports:
+      - ${postgres_port}:${postgres_port}
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    restart: always
+  
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - ${redis_port}:${redis_port}
+    restart: always
+
+  api:
+    build:
+      dockerfile: Dockerfile.api
+    container_name: api_service
+    volumes:
+    - ./logger/gin.log:/api/logger/gin.log
+    - ./configs/config.toml:/api/configs/config.toml
+    ports:
+      - ${bind_addr}:${bind_addr}
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    restart: always

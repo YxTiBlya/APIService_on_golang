@@ -1,0 +1,16 @@
+FROM golang:1.19.4
+
+WORKDIR /api
+
+COPY cmd/apiserver cmd/apiserver/
+COPY internal/apiserver internal/apiserver/
+COPY internal/cache internal/cache/
+COPY internal/cfg internal/cfg/
+COPY internal/models internal/models/
+COPY internal/rabbitmq internal/rabbitmq/
+COPY internal/store internal/store/
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+CMD [ "go", "run", "cmd/apiserver/apiserver.go" ]
