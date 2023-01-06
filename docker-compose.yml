@@ -41,3 +41,16 @@ services:
       - rabbitmq
       - redis
     restart: always
+  
+  mailer:
+    build:
+      dockerfile: Dockerfile.mailer
+    container_name: mailer_service
+    volumes:
+    - ./logger/mailer.log:/mailer/logger/mailer.log
+    - ./configs/config.toml:/mailer/configs/config.toml
+    depends_on:
+    - api
+    - db
+    - rabbitmq
+    restart: always
