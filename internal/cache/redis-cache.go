@@ -15,7 +15,7 @@ var ctx = context.Background()
 func getClient() *redis.Client {
 	config := cfg.GetConfig()
 	return redis.NewClient(&redis.Options{
-		Addr:     config.RedisHost + config.RedisPort,
+		Addr:     config.RedisHost + ":" + config.RedisPort,
 		Password: config.RedisPass,
 		DB:       config.RedisDb,
 	})
