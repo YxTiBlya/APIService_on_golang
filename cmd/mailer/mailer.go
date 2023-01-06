@@ -28,7 +28,7 @@ func main() {
 	log.Println("Start mailer service")
 
 	// connection to db
-	_, err := store.NewDB(config.DatabaseURL)
+	_, err := store.NewDB(config)
 	if err != nil {
 		log.Println("failed to connect database")
 		return
