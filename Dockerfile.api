@@ -9,6 +9,7 @@ COPY internal/cfg internal/cfg/
 COPY internal/models internal/models/
 COPY internal/rabbitmq internal/rabbitmq/
 COPY internal/store internal/store/
+
 COPY go.mod ./
 COPY go.sum ./
 
