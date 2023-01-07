@@ -2,6 +2,7 @@
 bind_addr = "8080"                 # port of apiserver
 secret_key = "secret key"          # secret key for jwt
 jwt_time = 60                      # jwt lifetime in minuts
+api_host = "localhost"             # host of api service (def - localhost)
 
 postgres_user = "postgres"
 postgres_password = "password"
@@ -14,8 +15,11 @@ redis_host = "redis"
 redis_port = "6379"
 redis_pass = ""
 redis_db = 0
-redis_exp = 60                    # redis var lifetime in seconds
+redis_exp = 60                     # redis var lifetime in seconds
 
 rabbit_url = "amqp://guest:guest@rabbitmq:5672/"
 
-mailer_exp = 60                   # mailer waiting time in seconds
+mailer_exp = 60                    # mailer waiting time in seconds
+
+tg_token = "token" # tg bot token
+tg_admins = [334537799]            # array with tg id. for example [123432, 675345]
