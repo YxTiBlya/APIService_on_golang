@@ -2,3 +2,4 @@ configs/
 logger/
 postgres_data/
 venv/
+__pycache__
