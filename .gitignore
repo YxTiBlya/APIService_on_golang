@@ -1,4 +1,4 @@
-request.py
 configs/
 logger/
 postgres_data/
+venv/
