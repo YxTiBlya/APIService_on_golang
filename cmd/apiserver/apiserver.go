@@ -75,6 +75,8 @@ func main() {
 		authorized.GET("/api/message/get", routehandler.Message_get)
 		authorized.PUT("/api/message/put", routehandler.Message_put)
 		authorized.DELETE("/api/message/delete", routehandler.Message_delete)
+
+		authorized.GET("/api/stat/get/:id", routehandler.Stat_get)
 	}
 
 	r.Run(":" + config.BindAddr)
