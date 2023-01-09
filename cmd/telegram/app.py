@@ -1,5 +1,8 @@
 import logging, requests
 import config as cfg
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import FSMContext
 from aiogram import Bot, Dispatcher, executor, types
 import markup as nav
 
@@ -19,9 +22,13 @@ logger.addHandler(console_handler)
 # get config
 config = cfg.get_config()
 
-# init bot and dispatcher
+# init bot, storage, dispatcher
 bot = Bot(config.Token)
-dp = Dispatcher(bot)
+storage = MemoryStorage()   
+dp = Dispatcher(bot, storage=storage)
+
+class Form(StatesGroup):
+    get_id = State()
 
 @dp.message_handler(commands=['start'])
 async def start(message:types.Message):
@@ -83,10 +90,36 @@ async def main(message:types.Message):
                 logger.info(err)
                 await bot.send_message(message.chat.id, "Произошла ошибка, попробуйте поменять токен")
         
+        elif message.text == "Статистика":
+            await bot.send_message(message.chat.id, "Введите id рассылки", reply_markup=nav.cancel)
+            await Form.get_id.set()
+
         else:
             await bot.send_message(message.chat.id, "Такая команда отсутствует")
 
+@dp.message_handler(state=Form.get_id)
+async def get_id(message: types.Message, state: FSMContext):
+    id = message.text
 
+    if id == "Отмена":
+        await state.reset_state()
+        await bot.send_message(message.chat.id, "Отменено!", reply_markup=nav.main_menu)
+        return
+
+    try:
+        r = requests.get(f"{config.Addr}/api/stat/get/{id}", headers={"token": config.JWT})
+        response = r.json()["response"]
+
+        msg = f"Результат\nСообщения отправленные по рассылке {id}:\n\n"
+        for rmessage in response:
+            msg += f"id: {rmessage['id']}\nвремя отправки: {rmessage['datetime']}\nстатус: {rmessage['status']}\nid рассылки: {rmessage['mailing_id']}\nid контакта: {rmessage['contact_id']}\n\n"
+
+        await bot.send_message(message.chat.id, msg, reply_markup=nav.main_menu)
+    except Exception as err:
+        logger.info(err)
+        await bot.send_message(message.chat.id, "Произошла ошибка, попробуйте поменять токен", reply_markup=nav.main_menu)
+
+    await state.finish()
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates = True) 
