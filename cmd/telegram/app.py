@@ -39,6 +39,53 @@ async def main(message:types.Message):
             config.update_jwt(r.json()['token'])
 
             await bot.send_message(message.chat.id, "Успешно")
+        
+        elif message.text == "Контакты":
+            try:
+                r = requests.get(f"{config.Addr}/api/contact/get", headers={"token": config.JWT})
+                response = r.json()["response"]
+
+                msg = "Результат:\n\n"
+                for contact in response:
+                    msg += f"id: {contact['id']}\nномер: {contact['number']}\nкод оператора: {contact['operator_code']}\nтег: {contact['tag']}\nчасовой пояс: {contact['time_zone']}\n\n"
+
+                await bot.send_message(message.chat.id, msg)
+
+            except Exception as err:
+                logger.info(err)
+                await bot.send_message(message.chat.id, "Произошла ошибка, попробуйте поменять токен")
+
+        elif message.text == "Рассылки":
+            try:
+                r = requests.get(f"{config.Addr}/api/mailing/get", headers={"token": config.JWT})
+                response = r.json()["response"]
+
+                msg = "Результат:\n\n"
+                for mailing in response:
+                    msg += f"id: {mailing['id']}\nстарт: {mailing['start_time']}\nсообщение: {mailing['message']}\nфильтры: {mailing['filters']}\nконец: {mailing['end_time']}\n\n"
+
+                await bot.send_message(message.chat.id, msg)
+            except Exception as err:
+                logger.info(err)
+                await bot.send_message(message.chat.id, "Произошла ошибка, попробуйте поменять токен")
+
+        elif message.text == "Сообщения":
+            try:
+                r = requests.get(f"{config.Addr}/api/message/get", headers={"token": config.JWT})
+                response = r.json()["response"]
+
+                msg = "Результат:\n\n"
+                for rmessage in response:
+                    msg += f"id: {rmessage['id']}\nвремя отправки: {rmessage['datetime']}\nстатус: {rmessage['status']}\nid рассылки: {rmessage['mailing_id']}\nid контакта: {rmessage['contact_id']}\n\n"
+
+                await bot.send_message(message.chat.id, msg)
+            except Exception as err:
+                logger.info(err)
+                await bot.send_message(message.chat.id, "Произошла ошибка, попробуйте поменять токен")
+        
+        else:
+            await bot.send_message(message.chat.id, "Такая команда отсутствует")
+
 
 
 if __name__ == "__main__":
