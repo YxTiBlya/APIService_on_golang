@@ -1,0 +1,10 @@
+FROM python:3.9
+
+WORKDIR /telegram
+
+COPY cmd/telegram .
+COPY requerements.txt .
+
+RUN pip install -r requerements.txt
+
+CMD ["python", "app.py"]
