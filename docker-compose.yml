@@ -54,3 +54,15 @@ services:
     - db
     - rabbitmq
     restart: always
+
+  telegram:
+    build:
+      dockerfile: Dockerfile.tg
+    container_name: telegram_bot
+    volumes:
+    - ./logger/telegram.log:/telegram/logger/telegram.log
+    - ./configs/config.toml:/telegram/configs/config.toml
+    depends_on:
+      - api
+      - mailer
+    restart: always
